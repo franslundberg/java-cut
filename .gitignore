@@ -12,3 +12,7 @@
 hs_err_pid*
 /bin/
 /out/
+
+.project
+.classpath
+
