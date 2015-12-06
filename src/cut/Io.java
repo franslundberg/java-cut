@@ -1,6 +1,7 @@
 package cut;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,4 +44,43 @@ public class Io {
             out.write(buffer, 0, n);
         }
     }
+    
+
+    /**
+     * Writes an array of bytes to a file.
+     * 
+     * @param bytes The bytes to write to file.
+     * @param filename The name of the file.
+     * @throws IllegalArgumentException if either of the arguments is null or if filename is an 
+     * empty string.
+     * @throws IOException If there is an IO problem.
+     */
+    public static void bytesToFile(byte[] bytes, String filename) throws IOException {
+        FileOutputStream out;
+
+        if (bytes == null) {
+            throw new IllegalArgumentException("bytes == null not allowed");
+        }
+        if (filename == null) {
+            throw new IllegalArgumentException("filename == null not allowed");
+        }
+        if (filename.length() == 0) {
+            throw new IllegalArgumentException(
+                    "Empty string not allowed as filename.");
+        }
+
+        out = new FileOutputStream(filename);
+        try {
+            out.write(bytes);
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    // empty
+                }
+            }
+        }
+    }
+    
 }
