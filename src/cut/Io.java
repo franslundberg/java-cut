@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+// TODO D. implement readFully(InputStream in, byte[] dest, int offset, int length).
+
 /**
  * IO utility functions.
  * 
@@ -82,5 +84,4 @@ public class Io {
             }
         }
     }
-    
 }
