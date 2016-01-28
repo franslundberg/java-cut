@@ -1,12 +1,10 @@
 package cut;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -80,8 +78,13 @@ public class MyUncaughtExceptionHandler implements UncaughtExceptionHandler {
 
         String filename = "exception.txt";
         try {
-            Files.write(Paths.get(filename), messageBytes,
-                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        	FileOutputStream out = new FileOutputStream(filename);
+        	try {
+        		out.write(messageBytes);
+        		out.flush();
+        	} finally {
+        		out.close();
+        	}
         } catch (IOException e) {
             System.err.println("Could not write error text to " + filename + ", " + e.getMessage());
         }
