@@ -80,6 +80,26 @@ public class Hex {
         return result;
     }
     
+    /**
+     * To C-code array initializer. Good to for inline C-code test data, for example.
+     */
+    public static String toCBytes(byte[] bytes) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            b.append("0x" + Hex.create(new byte[]{bytes[i]}));
+            if (i != bytes.length - 1) {
+                b.append(",");
+            }
+            
+            if (i % 16 == 15) {
+                b.append("\n");
+            } else {
+                b.append(" ");
+            }
+        }
+        return b.toString();
+    }
+    
     private static int hexCharToInt(char c) {
         int result = -1;
         
