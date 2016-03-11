@@ -1,4 +1,4 @@
-package cutexp;
+package cut;
 
 /**
  * An instance of this class can be used to create deterministic tests for 
