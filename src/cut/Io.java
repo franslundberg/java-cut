@@ -1,12 +1,11 @@
 package cut;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-// TODO D. implement readFully(InputStream in, byte[] dest, int offset, int length).
 
 /**
  * IO utility functions.
@@ -83,5 +82,41 @@ public class Io {
                 }
             }
         }
+    }
+    
+    /**
+     * Writes a string to UTF8 bytes in a file.
+     */
+    public static void stringToFile(String string, String filename) throws IOException {
+        bytesToFile(string.getBytes("UTF-8"), filename);
+    }
+    
+
+    public static byte[] fileToBytes(String filename) throws IOException {
+        FileInputStream in;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        
+        if (filename == null) {
+            throw new IllegalArgumentException("filename == null not allowed");
+        }
+        
+        if (filename.length() == 0) {
+            throw new IllegalArgumentException(
+                    "Empty string not allowed as filename.");
+        }
+        
+        in = new FileInputStream(filename);
+        try {
+            Io.copy(in, out);
+        } finally {
+            in.close();
+            out.close();
+        }
+        
+        return out.toByteArray();
+    }
+    
+    public static String fileToString(String filename) throws IOException {
+        return new String(fileToBytes(filename), "UTF-8");
     }
 }
