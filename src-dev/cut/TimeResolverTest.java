@@ -155,7 +155,7 @@ public class TimeResolverTest {
     @Test
     public void testMinus2() {
         long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
-        long t2 = TimeResolver.resolve(UTC, t1, "-1 d 13:00:01");
+        long t2 = TimeResolver.resolve(UTC, t1, "-1 days 13:00:01");
         long t3 = TimeResolver.resolve(UTC, 0, "2010-03-13 13:00:01");
         Assert.assertEquals(t3, t2);
     }
@@ -163,8 +163,55 @@ public class TimeResolverTest {
     @Test
     public void testMinus3() {
         long t1 = TimeResolver.resolve(UTC, 0, "2013-09-01 03:01:10");
-        long t2 = TimeResolver.resolve(UTC, t1, "-1 d 09:00");
+        long t2 = TimeResolver.resolve(UTC, t1, "-1 days 09:00");
         long t3 = TimeResolver.resolve(UTC, 0, "2013-08-31 09:00:00");
+        Assert.assertEquals(t3, t2);
+    }
+    
+    
+    @Test
+    public void testPlus0() {
+        long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
+        long t2 = TimeResolver.resolve(UTC, t1, "+10 s");
+        Assert.assertEquals(10 * UNITS_PER_SECOND, t2 - t1);
+    }
+    
+    @Test
+    public void testPlus1() {
+        long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
+        long t2 = TimeResolver.resolve(UTC, t1, "+10 m");
+        Assert.assertEquals(UNITS_PER_SECOND * 600, t2 - t1);
+    }
+    
+    @Test
+    public void testPlus2() {
+        long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
+        long t2 = TimeResolver.resolve(UTC, t1, "+1 days 13:00:01");
+        long t3 = TimeResolver.resolve(UTC, 0, "2010-03-15 13:00:01");
+        Assert.assertEquals(t3, t2);
+    }
+    
+    @Test
+    public void testWeeks() {
+        long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
+        long t2 = TimeResolver.resolve(UTC, t1, "+1 weeks");
+        long t3 = TimeResolver.resolve(UTC, 0, "2010-03-21 03:01:10");
+        Assert.assertEquals(t3, t2);
+    }
+    
+    @Test
+    public void testMonths() {
+        long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
+        long t2 = TimeResolver.resolve(UTC, t1, "+2 months");
+        long t3 = TimeResolver.resolve(UTC, 0, "2010-05-13 03:01:10");
+        Assert.assertEquals(t3, t2);
+    }
+    
+    @Test
+    public void testYears() {
+        long t1 = TimeResolver.resolve(UTC, 0, "2010-03-14 03:01:10");
+        long t2 = TimeResolver.resolve(UTC, t1, "+2 years");
+        long t3 = TimeResolver.resolve(UTC, 0, "2012-03-13 03:01:10");
         Assert.assertEquals(t3, t2);
     }
 

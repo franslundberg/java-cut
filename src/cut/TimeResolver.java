@@ -38,7 +38,13 @@ import java.util.TimeZone;
  * "-1.5 s"                         -- 1.5 seconds ago.
  * "-30 m"                          -- 30 minutes ago.
  * "-2 h"                           -- 2 hours ago. 
- * "-3 d"                           -- 3 days ago (1 day = 24.0 hours).
+ * "-3 days"                        -- 3 days ago (1 day = 24.0 hours).
+ * 
+ * The unit "months" is always 30 days; the unit "years" is always 365 days.
+ * 
+ * PLUS-TIME
+ * 
+ * "Plus-time" is a positive offset to the current time. Similar to minus-time.
  * 
  * MINUS-TIME PLUS TIME-OF-DAY
  * 
@@ -55,13 +61,13 @@ import java.util.TimeZone;
  * MORE FORMAL
  * The syntax for a time-string can be more formally be described by this ABNF:
  * 
- * time-string = absolute / time-of-day / minus / "now" 
+ * time-string = absolute / time-of-day / plus-minus / "now" 
  * absolute = absolute-date [space-or-t time-of-day]
  * absolute-date = "YYYY-MM-DD" / "YYYY-MM"
  * time-of-day = "HH:MM:SS.d" / "HH:MM"
  * space-or-t = SPACE / "T"
- * minus = "-" number SPACE unit [SPACE time]
- * unit = "s" / "m" / "h" / "d"
+ * plus-minus = ("+" / "-") number SPACE unit [SPACE time]
+ * unit = "s" / "m" / "h" / "days" / "weeks" / "months" / "years"
  * </pre>
  * 
  * @author Frans Lundberg
@@ -142,8 +148,8 @@ public class TimeResolver {
         }
         
         char first = timeString.charAt(0);
-        if (first == '-') {
-            return minus(currentTime, timeString);
+        if (first == '-' || first == '+') {
+            return plusOrMinus(currentTime, timeString);
         }
         
         if (length > 4 && timeString.charAt(4) == '-') {
@@ -335,10 +341,10 @@ public class TimeResolver {
         }
     }
     
-    private long minus(long currentTime, String timeString) {
+    private long plusOrMinus(long currentTime, String timeString) {
         String[] parts = timeString.split(" ");
         if (parts.length < 2) {
-            throw new BadFormatException("Bad minus time string: '" + timeString + "'.");
+            throw new BadFormatException("Bad plus/minus time string: '" + timeString + "'.");
         }
         
         double number = parseNumber(parts[0], timeString);
@@ -347,12 +353,13 @@ public class TimeResolver {
         
         double deltaTime = number * factor;
         long time = currentTime + ((long) deltaTime);
+        
         if (time < 0) {
             throw new BadFormatException("Time out of range (negative: " + time 
                     + "), time string was: '" + timeString + "'.");
         }
         
-        // If time of day comes after minus expression.
+        // If time of day comes after plus-minus expression.
         if (parts.length > 2) {
             parseTime(timeString, parts[0].length() + 1 + parts[1].length() + 1);
             time = computeTimeUnitsB(time);
@@ -366,38 +373,44 @@ public class TimeResolver {
         try {
             number = Double.parseDouble(numberString);
         } catch (NumberFormatException e) {
-            throw new BadFormatException("Bad minus time string: '" + timeString + "'.");
+            throw new BadFormatException("Bad plus/minus time string: '" + timeString + "'.");
         }
         
-        if (number > 0.0) {
-            throw new BadFormatException("Bad minus time string: '" + timeString + "'.");
-        }
         return number;
     }
 
     private double parseUnit(String unit, String timeString) {
-        if (unit.length() != 1) {
-            throw new BadFormatException("Bad minus time string, unexpected unit, was: '" + timeString + "'.");
-        }
-        
-        char unitChar = unit.charAt(0);
         double factor;
         
-        switch (unitChar) {
-        case 's':
+        switch (unit) {
+        case "s":
             factor = UNITS_PER_SECOND;
             break;
-        case 'm':
+        case "m":
             factor = UNITS_PER_SECOND * 60.0;
             break;
-        case 'h':
+        case "h":
             factor = UNITS_PER_SECOND * 3600.0;
             break;
-        case 'd':
+        case "day":
+        case "days":
             factor = UNITS_PER_SECOND * 3600.0 * 24.0;
             break;
+        case "week":
+        case "weeks":
+            factor = UNITS_PER_SECOND * 3600.0 * 24.0 * 7;
+            break;
+        case "month":
+        case "months":
+            factor = UNITS_PER_SECOND * 3600.0 * 24.0 * 30;
+            break;
+        case "year":
+        case "years":
+            factor = UNITS_PER_SECOND * 3600.0 * 24.0 * 365;
+            break;
+        
         default:
-            throw new BadFormatException("Bad minus time string, bad unit, was: '" + timeString + "'.");
+            throw new BadFormatException("Bad plus-minus time string, bad unit, was: '" + timeString + "'.");
         }
         return factor;
     }
