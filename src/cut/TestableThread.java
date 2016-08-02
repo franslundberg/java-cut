@@ -1,8 +1,8 @@
-package cutexp;
+package cut;
 
 /**
- * Used to create deterministic tests for multi-threaded software.
- * Use it by inserting statements like this:
+ * An instance of this class can be used to create deterministic tests for 
+ * multi-threaded software. Use it by inserting statements like this:
  * 
  * assert TestableThread.breakpoint("breakA");
  * 
@@ -13,8 +13,6 @@ package cutexp;
  * @author Frans Lundberg
  */
 public class TestableThread extends Thread {
-    // Maybe publish to blog.franslundberg.com when tested more.
-    
     private final Object sync = new Object();
     private volatile String breakName;
     
