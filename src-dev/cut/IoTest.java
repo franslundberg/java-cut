@@ -40,9 +40,9 @@ public class IoTest {
     }
     
     @Test
-    public void testToBytes() throws IOException {
-        ByteArrayInputStream in = new ByteArrayInputStream(new byte[]{1, -100});
-        byte[] out = Io.toBytes(in);
-        Assert.assertArrayEquals(new byte[]{1, -100}, out);
+    public void testStreamToBytes() throws IOException {
+        ByteArrayInputStream in = new ByteArrayInputStream(new byte[]{1, 2, 3});
+        byte[] bytes = Io.streamToBytes(in);
+        Assert.assertArrayEquals(new byte[]{1, 2, 3}, bytes);
     }
 }

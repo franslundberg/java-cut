@@ -22,7 +22,7 @@ public class Io {
      * 
      * @throws IOException 
      */
-    public static byte[] toBytes(InputStream in) throws IOException {
+    public static byte[] streamToBytes(InputStream in) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         copy(in, out);
         return out.toByteArray();
