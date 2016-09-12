@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Static utility methods for creating objects.
+ * Static utility methods for creating objects (collections).
  * 
  * @author Frans Lundberg
  */

@@ -5,9 +5,9 @@ import java.io.UnsupportedEncodingException;
 /**
  * Utility class for storing primitive types: long, double, int, short, ushort in byte arrays.
  * The implementation here was developed as a performance optimization; Java's ByteBuffer
- * was significantly slower.
+ * was significantly slower when tested.
  * 
- * Originally taken from BergDB, December 2015.
+ * Originally taken from BergDB (bergdb.com), December 2015.
  * 
  * @author Frans Lundberg
  */
