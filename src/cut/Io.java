@@ -119,4 +119,25 @@ public class Io {
     public static String fileToString(String filename) throws IOException {
         return new String(fileToBytes(filename), "UTF-8");
     }
+    
+    /**
+     * Blocks until 'length' bytes have been read to 'dest'.
+     */
+    public static void readFully(InputStream in, byte[] dest, int offset, final int length) 
+            throws IOException {
+        int len = length;
+        
+        while (true) {
+            int count = in.read(dest, offset, len);
+            if (count == -1) {
+                throw new EOFException("EOF reached");
+            }
+            
+            offset += count;
+            len -= count;
+            if (len == 0) {
+                break;
+            }
+        }
+    }
 }
